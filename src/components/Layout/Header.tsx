@@ -19,7 +19,7 @@ export default function Header() {
               <span className="text-white text-lg font-bold">✓</span>
             </div>
             <h1 className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              TestMark AI
+              EmuMark 
             </h1>
           </div>
         </div>
