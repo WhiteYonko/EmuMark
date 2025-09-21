@@ -7,13 +7,17 @@ import {
   BarChart3, 
   BookOpen, 
   Settings,
-  LogOut
+  LogOut,
+  GraduationCap,
+  ClipboardList
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
 const menuItems = [
   { id: 'dashboard', label: 'Dashboard', icon: Home },
   { id: 'students', label: 'Students', icon: Users },
+  { id: 'classes', label: 'Classes', icon: GraduationCap },
+  { id: 'assessments', label: 'Assessments', icon: ClipboardList },
   { id: 'tests', label: 'Test Templates', icon: FileText },
   { id: 'upload', label: 'Upload Tests', icon: Upload },
   { id: 'results', label: 'Results', icon: BarChart3 },

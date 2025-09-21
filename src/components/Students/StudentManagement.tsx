@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Plus, Search, Filter, MoreVertical, TrendingUp, TrendingDown } from 'lucide-react';
+import { Plus, Search, Filter, Upload, MoreVertical, TrendingUp, TrendingDown } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { Student } from '../../types';
 import AddStudentModal from './AddStudentModal';
+import BulkImportModal from './BulkImportModal';
 import StudentCard from './StudentCard';
 
 export default function StudentManagement() {
@@ -11,6 +12,7 @@ export default function StudentManagement() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedGrade, setSelectedGrade] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showBulkImportModal, setShowBulkImportModal] = useState(false);
 
   const filteredStudents = students.filter(student => {
     const matchesSearch = student.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -26,13 +28,22 @@ export default function StudentManagement() {
         <h2 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
           Student Management
         </h2>
-        <button
-          onClick={() => setShowAddModal(true)}
-          className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Add Student</span>
-        </button>
+        <div className="flex space-x-3">
+          <button
+            onClick={() => setShowBulkImportModal(true)}
+            className="flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+          >
+            <Upload className="w-4 h-4" />
+            <span>Bulk Import</span>
+          </button>
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Add Student</span>
+          </button>
+        </div>
       </div>
 
       {/* Search and Filters */}
@@ -92,6 +103,11 @@ export default function StudentManagement() {
       {/* Add Student Modal */}
       {showAddModal && (
         <AddStudentModal onClose={() => setShowAddModal(false)} />
+      )}
+
+      {/* Bulk Import Modal */}
+      {showBulkImportModal && (
+        <BulkImportModal onClose={() => setShowBulkImportModal(false)} />
       )}
     </div>
   );

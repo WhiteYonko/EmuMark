@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, ReactNode } from 'react';
-import { Teacher, Student, Subject, TestTemplate, TestResult, UploadedTest } from '../types';
+import { Teacher, Student, Subject, TestTemplate, TestResult, UploadedTest, Class, Assessment, GradeEntry, AssessmentHistory } from '../types';
 
 interface AppState {
   currentTeacher: Teacher | null;
@@ -8,6 +8,10 @@ interface AppState {
   testTemplates: TestTemplate[];
   testResults: TestResult[];
   uploadedTests: UploadedTest[];
+  classes: Class[];
+  assessments: Assessment[];
+  gradeEntries: GradeEntry[];
+  assessmentHistory: AssessmentHistory[];
   currentView: string;
   darkMode: boolean;
 }
@@ -20,6 +24,16 @@ type AppAction =
   | { type: 'ADD_TEST_TEMPLATE'; payload: TestTemplate }
   | { type: 'ADD_TEST_RESULT'; payload: TestResult }
   | { type: 'ADD_UPLOADED_TEST'; payload: UploadedTest }
+  | { type: 'ADD_CLASS'; payload: Class }
+  | { type: 'UPDATE_CLASS'; payload: Class }
+  | { type: 'DELETE_CLASS'; payload: string }
+  | { type: 'ADD_ASSESSMENT'; payload: Assessment }
+  | { type: 'UPDATE_ASSESSMENT'; payload: Assessment }
+  | { type: 'DELETE_ASSESSMENT'; payload: string }
+  | { type: 'ADD_GRADE_ENTRY'; payload: GradeEntry }
+  | { type: 'UPDATE_GRADE_ENTRY'; payload: GradeEntry }
+  | { type: 'DELETE_GRADE_ENTRY'; payload: string }
+  | { type: 'BULK_ADD_STUDENTS'; payload: Student[] }
   | { type: 'SET_VIEW'; payload: string }
   | { type: 'TOGGLE_DARK_MODE' }
   | { type: 'LOAD_INITIAL_DATA' };
@@ -37,6 +51,10 @@ const initialState: AppState = {
   testTemplates: [],
   testResults: [],
   uploadedTests: [],
+  classes: [],
+  assessments: [],
+  gradeEntries: [],
+  assessmentHistory: [],
   currentView: 'dashboard',
   darkMode: false,
 };
@@ -63,6 +81,44 @@ function appReducer(state: AppState, action: AppAction): AppState {
       return { ...state, testResults: [...state.testResults, action.payload] };
     case 'ADD_UPLOADED_TEST':
       return { ...state, uploadedTests: [...state.uploadedTests, action.payload] };
+    case 'ADD_CLASS':
+      return { ...state, classes: [...state.classes, action.payload] };
+    case 'UPDATE_CLASS':
+      return {
+        ...state,
+        classes: state.classes.map(c => c.id === action.payload.id ? action.payload : c)
+      };
+    case 'DELETE_CLASS':
+      return {
+        ...state,
+        classes: state.classes.filter(c => c.id !== action.payload)
+      };
+    case 'ADD_ASSESSMENT':
+      return { ...state, assessments: [...state.assessments, action.payload] };
+    case 'UPDATE_ASSESSMENT':
+      return {
+        ...state,
+        assessments: state.assessments.map(a => a.id === action.payload.id ? action.payload : a)
+      };
+    case 'DELETE_ASSESSMENT':
+      return {
+        ...state,
+        assessments: state.assessments.filter(a => a.id !== action.payload)
+      };
+    case 'ADD_GRADE_ENTRY':
+      return { ...state, gradeEntries: [...state.gradeEntries, action.payload] };
+    case 'UPDATE_GRADE_ENTRY':
+      return {
+        ...state,
+        gradeEntries: state.gradeEntries.map(g => g.id === action.payload.id ? action.payload : g)
+      };
+    case 'DELETE_GRADE_ENTRY':
+      return {
+        ...state,
+        gradeEntries: state.gradeEntries.filter(g => g.id !== action.payload)
+      };
+    case 'BULK_ADD_STUDENTS':
+      return { ...state, students: [...state.students, ...action.payload] };
     case 'SET_VIEW':
       return { ...state, currentView: action.payload };
     case 'TOGGLE_DARK_MODE':
@@ -82,7 +138,39 @@ function appReducer(state: AppState, action: AppAction): AppState {
               { subject: 'Mathematics', grade: 90, trend: 'up' },
               { subject: 'English', grade: 82, trend: 'stable' },
               { subject: 'Science', grade: 83, trend: 'down' },
-            ]
+            ],
+            parentContacts: {
+              primary: {
+                name: 'Sarah Thompson',
+                email: 'sarah.thompson@email.com',
+                phone: '+1-555-0123',
+                relationship: 'Mother'
+              },
+              secondary: {
+                name: 'John Thompson',
+                email: 'john.thompson@email.com',
+                phone: '+1-555-0124',
+                relationship: 'Father'
+              }
+            },
+            emergencyContact: {
+              name: 'Mary Thompson',
+              phone: '+1-555-0125',
+              relationship: 'Grandmother'
+            },
+            address: {
+              street: '123 Oak Street',
+              city: 'Springfield',
+              state: 'IL',
+              zipCode: '62701'
+            },
+            medicalInfo: {
+              allergies: ['Peanuts'],
+              medications: [],
+              conditions: []
+            },
+            enrollmentDate: '2024-08-15',
+            classIds: ['class-1', 'class-2']
           },
           {
             id: '2',
@@ -95,7 +183,33 @@ function appReducer(state: AppState, action: AppAction): AppState {
               { subject: 'Mathematics', grade: 75, trend: 'up' },
               { subject: 'English', grade: 68, trend: 'down' },
               { subject: 'History', grade: 74, trend: 'stable' },
-            ]
+            ],
+            parentContacts: {
+              primary: {
+                name: 'Lisa Johnson',
+                email: 'lisa.johnson@email.com',
+                phone: '+1-555-0126',
+                relationship: 'Mother'
+              }
+            },
+            emergencyContact: {
+              name: 'Robert Johnson',
+              phone: '+1-555-0127',
+              relationship: 'Uncle'
+            },
+            address: {
+              street: '456 Pine Avenue',
+              city: 'Springfield',
+              state: 'IL',
+              zipCode: '62702'
+            },
+            medicalInfo: {
+              allergies: [],
+              medications: [],
+              conditions: []
+            },
+            enrollmentDate: '2024-08-15',
+            classIds: ['class-1', 'class-3']
           },
           {
             id: '3',
@@ -108,7 +222,91 @@ function appReducer(state: AppState, action: AppAction): AppState {
               { subject: 'Mathematics', grade: 95, trend: 'stable' },
               { subject: 'Science', grade: 92, trend: 'up' },
               { subject: 'Geography', grade: 92, trend: 'up' },
-            ]
+            ],
+            parentContacts: {
+              primary: {
+                name: 'Wei Chen',
+                email: 'wei.chen@email.com',
+                phone: '+1-555-0128',
+                relationship: 'Father'
+              },
+              secondary: {
+                name: 'Mei Chen',
+                email: 'mei.chen@email.com',
+                phone: '+1-555-0129',
+                relationship: 'Mother'
+              }
+            },
+            emergencyContact: {
+              name: 'David Chen',
+              phone: '+1-555-0130',
+              relationship: 'Uncle'
+            },
+            address: {
+              street: '789 Maple Drive',
+              city: 'Springfield',
+              state: 'IL',
+              zipCode: '62703'
+            },
+            medicalInfo: {
+              allergies: [],
+              medications: [],
+              conditions: []
+            },
+            enrollmentDate: '2024-08-15',
+            classIds: ['class-2', 'class-3']
+          }
+        ],
+        classes: [
+          {
+            id: 'class-1',
+            name: 'Mathematics Grade 4A',
+            grade: 'Grade 4',
+            subject: 'Mathematics',
+            teacherId: '1',
+            studentIds: ['1', '2'],
+            schedule: [
+              { day: 'Monday', time: '09:00', duration: 60 },
+              { day: 'Wednesday', time: '09:00', duration: 60 },
+              { day: 'Friday', time: '09:00', duration: 60 }
+            ],
+            room: 'Room 101',
+            description: 'Advanced Mathematics for Grade 4 students',
+            createdAt: '2024-08-01',
+            academicYear: '2024-2025'
+          },
+          {
+            id: 'class-2',
+            name: 'Science Grade 4B',
+            grade: 'Grade 4',
+            subject: 'Science',
+            teacherId: '1',
+            studentIds: ['1', '3'],
+            schedule: [
+              { day: 'Tuesday', time: '10:00', duration: 60 },
+              { day: 'Thursday', time: '10:00', duration: 60 }
+            ],
+            room: 'Room 102',
+            description: 'General Science for Grade 4 students',
+            createdAt: '2024-08-01',
+            academicYear: '2024-2025'
+          },
+          {
+            id: 'class-3',
+            name: 'English Grade 4C',
+            grade: 'Grade 4',
+            subject: 'English',
+            teacherId: '1',
+            studentIds: ['2', '3'],
+            schedule: [
+              { day: 'Monday', time: '11:00', duration: 60 },
+              { day: 'Wednesday', time: '11:00', duration: 60 },
+              { day: 'Friday', time: '11:00', duration: 60 }
+            ],
+            room: 'Room 103',
+            description: 'English Language Arts for Grade 4 students',
+            createdAt: '2024-08-01',
+            academicYear: '2024-2025'
           }
         ]
       };

@@ -20,6 +20,38 @@ export interface Student {
     grade: number;
     trend: 'up' | 'down' | 'stable';
   }[];
+  parentContacts: {
+    primary: {
+      name: string;
+      email: string;
+      phone: string;
+      relationship: string;
+    };
+    secondary?: {
+      name: string;
+      email: string;
+      phone: string;
+      relationship: string;
+    };
+  };
+  emergencyContact: {
+    name: string;
+    phone: string;
+    relationship: string;
+  };
+  address?: {
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+  };
+  medicalInfo?: {
+    allergies: string[];
+    medications: string[];
+    conditions: string[];
+  };
+  enrollmentDate: string;
+  classIds: string[];
 }
 
 export interface Subject {
@@ -80,4 +112,67 @@ export interface UploadedTest {
     confidence: number;
     suggestedGrade: number;
   };
+}
+
+export interface Class {
+  id: string;
+  name: string;
+  grade: string;
+  subject: string;
+  teacherId: string;
+  studentIds: string[];
+  schedule: {
+    day: string;
+    time: string;
+    duration: number;
+  }[];
+  room: string;
+  description?: string;
+  createdAt: string;
+  academicYear: string;
+}
+
+export interface Assessment {
+  id: string;
+  title: string;
+  subject: string;
+  classId: string;
+  type: 'quiz' | 'test' | 'assignment' | 'project' | 'exam';
+  totalMarks: number;
+  weight: number; // percentage of final grade
+  dueDate: string;
+  instructions?: string;
+  createdAt: string;
+  createdBy: string;
+}
+
+export interface GradeEntry {
+  id: string;
+  assessmentId: string;
+  studentId: string;
+  score: number;
+  maxScore: number;
+  percentage: number;
+  feedback?: string;
+  gradedBy: string;
+  gradedAt: string;
+  isLate: boolean;
+  latePenalty?: number;
+}
+
+export interface AssessmentHistory {
+  studentId: string;
+  subject: string;
+  assessments: {
+    assessmentId: string;
+    title: string;
+    type: string;
+    score: number;
+    maxScore: number;
+    percentage: number;
+    date: string;
+    feedback?: string;
+  }[];
+  averageScore: number;
+  totalAssessments: number;
 }

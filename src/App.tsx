@@ -4,6 +4,8 @@ import Header from './components/Layout/Header';
 import Sidebar from './components/Layout/Sidebar';
 import Dashboard from './components/Dashboard/Dashboard';
 import StudentManagement from './components/Students/StudentManagement';
+import ClassManagement from './components/Classes/ClassManagement';
+import AssessmentManagement from './components/Assessments/AssessmentManagement';
 import TestTemplates from './components/Tests/TestTemplates';
 import FileUpload from './components/Upload/FileUpload';
 import ResultsDashboard from './components/Results/ResultsDashboard';
@@ -34,6 +36,10 @@ function AppContent() {
     switch (currentView) {
       case 'students':
         return <StudentManagement />;
+      case 'classes':
+        return <ClassManagement />;
+      case 'assessments':
+        return <AssessmentManagement />;
       case 'tests':
         return <TestTemplates />;
       case 'upload':
