@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, ReactNode } from 'react';
-import { Teacher, Student, Subject, TestTemplate, TestResult, UploadedTest, Class, Assessment, GradeEntry, AssessmentHistory } from '../types';
+import { Teacher, Student, Subject, TestTemplate, TestResult, UploadedTest, Class, Assessment, GradeEntry, AssessmentHistory, AIAnalyticsData } from '../types';
 
 interface AppState {
   currentTeacher: Teacher | null;
@@ -12,6 +12,7 @@ interface AppState {
   assessments: Assessment[];
   gradeEntries: GradeEntry[];
   assessmentHistory: AssessmentHistory[];
+  aiAnalytics: AIAnalyticsData;
   currentView: string;
   darkMode: boolean;
 }
@@ -34,6 +35,7 @@ type AppAction =
   | { type: 'UPDATE_GRADE_ENTRY'; payload: GradeEntry }
   | { type: 'DELETE_GRADE_ENTRY'; payload: string }
   | { type: 'BULK_ADD_STUDENTS'; payload: Student[] }
+  | { type: 'UPDATE_AI_ANALYTICS'; payload: AIAnalyticsData }
   | { type: 'SET_VIEW'; payload: string }
   | { type: 'TOGGLE_DARK_MODE' }
   | { type: 'LOAD_INITIAL_DATA' };
@@ -55,6 +57,15 @@ const initialState: AppState = {
   assessments: [],
   gradeEntries: [],
   assessmentHistory: [],
+  aiAnalytics: {
+    insights: [],
+    trends: [],
+    learningGaps: [],
+    recommendations: [],
+    alerts: [],
+    subjectBreakdowns: [],
+    lastUpdated: new Date().toISOString(),
+  },
   currentView: 'dashboard',
   darkMode: false,
 };
@@ -119,6 +130,8 @@ function appReducer(state: AppState, action: AppAction): AppState {
       };
     case 'BULK_ADD_STUDENTS':
       return { ...state, students: [...state.students, ...action.payload] };
+    case 'UPDATE_AI_ANALYTICS':
+      return { ...state, aiAnalytics: action.payload };
     case 'SET_VIEW':
       return { ...state, currentView: action.payload };
     case 'TOGGLE_DARK_MODE':
@@ -308,7 +321,176 @@ function appReducer(state: AppState, action: AppAction): AppState {
             createdAt: '2024-08-01',
             academicYear: '2024-2025'
           }
-        ]
+        ],
+        // Add some demo AI analytics data
+        aiAnalytics: {
+          insights: [
+            {
+              id: 'insight-1-decline-1',
+              studentId: '2',
+              type: 'weakness',
+              category: 'academic',
+              title: 'Recent Performance Decline',
+              description: 'Liam Johnson has shown a 15% decline in recent performance.',
+              priority: 'high',
+              confidence: 85,
+              suggestedActions: [
+                'Schedule one-on-one meeting with student',
+                'Review recent assignments for patterns',
+                'Consider additional support resources',
+                'Contact parents for discussion'
+              ],
+              createdAt: new Date().toISOString(),
+              isRead: false,
+            },
+            {
+              id: 'insight-3-strength-1',
+              studentId: '3',
+              type: 'strength',
+              category: 'academic',
+              title: 'Excellent Performance',
+              description: 'Sofia Chen is consistently performing at a high level with an average of 93%.',
+              priority: 'low',
+              confidence: 95,
+              suggestedActions: [
+                'Consider advanced materials or enrichment activities',
+                'Use as peer mentor for struggling students',
+                'Maintain current support level'
+              ],
+              createdAt: new Date().toISOString(),
+              isRead: false,
+            }
+          ],
+          trends: [
+            {
+              studentId: '1',
+              subject: 'Mathematics',
+              period: 'month',
+              trend: 'improving',
+              trendScore: 12.5,
+              dataPoints: [
+                { date: '2024-01-01', score: 85, assessmentType: 'quiz' },
+                { date: '2024-01-08', score: 88, assessmentType: 'test' },
+                { date: '2024-01-15', score: 92, assessmentType: 'assignment' },
+                { date: '2024-01-22', score: 90, assessmentType: 'quiz' },
+                { date: '2024-01-29', score: 95, assessmentType: 'test' }
+              ],
+              predictedScore: 97,
+              confidence: 78,
+            },
+            {
+              studentId: '2',
+              subject: 'English',
+              period: 'month',
+              trend: 'declining',
+              trendScore: -8.2,
+              dataPoints: [
+                { date: '2024-01-01', score: 75, assessmentType: 'quiz' },
+                { date: '2024-01-08', score: 72, assessmentType: 'test' },
+                { date: '2024-01-15', score: 68, assessmentType: 'assignment' },
+                { date: '2024-01-22', score: 65, assessmentType: 'quiz' },
+                { date: '2024-01-29', score: 62, assessmentType: 'test' }
+              ],
+              predictedScore: 58,
+              confidence: 82,
+            }
+          ],
+          learningGaps: [
+            {
+              id: 'gap-2-english-1',
+              studentId: '2',
+              subject: 'English',
+              topic: 'Reading Comprehension',
+              severity: 'major',
+              description: 'Liam Johnson is struggling with fundamental concepts in English.',
+              suggestedResources: [
+                'English practice worksheets',
+                'Online tutorial videos',
+                'One-on-one tutoring sessions',
+                'Peer study groups',
+                'Specialized intervention program'
+              ],
+              estimatedTimeToClose: 30,
+              createdAt: new Date().toISOString(),
+              status: 'open',
+            }
+          ],
+          recommendations: [
+            {
+              id: 'rec-intervention-1',
+              type: 'intervention',
+              title: 'Implement Group Intervention Program',
+              description: '1 students are performing below 70%. Consider implementing a targeted intervention program.',
+              targetStudents: ['2'],
+              priority: 'high',
+              estimatedImpact: 75,
+              implementationSteps: [
+                'Identify common learning gaps',
+                'Create small group sessions',
+                'Develop targeted materials',
+                'Schedule regular progress checks',
+                'Involve parents in the process'
+              ],
+              requiredResources: [
+                'Additional teaching materials',
+                'Small group space',
+                'Progress tracking tools',
+                'Parent communication templates'
+              ],
+              createdAt: new Date().toISOString(),
+              status: 'pending',
+            }
+          ],
+          alerts: [
+            {
+              id: 'alert-2-drop-1',
+              type: 'grade_drop',
+              studentId: '2',
+              title: 'Significant Grade Drop Detected',
+              message: 'Liam Johnson has experienced a 15% drop in recent performance.',
+              severity: 'critical',
+              createdAt: new Date().toISOString(),
+              isRead: false,
+              actionRequired: true,
+              relatedData: {
+                recentAverage: 62,
+                overallAverage: 77,
+                dropPercentage: 15
+              },
+            }
+          ],
+          subjectBreakdowns: [
+            {
+              subject: 'Mathematics',
+              averageScore: 87,
+              studentCount: 2,
+              gradeDistribution: { A: 1, B: 1, C: 0, D: 0, F: 0 },
+              topPerformers: ['Sofia Chen'],
+              strugglingStudents: [],
+              commonWeaknesses: ['Problem-solving strategies', 'Word problems'],
+              improvementSuggestions: [
+                'Maintain current teaching strategies',
+                'Consider enrichment activities',
+                'Encourage peer tutoring'
+              ]
+            },
+            {
+              subject: 'English',
+              averageScore: 70,
+              studentCount: 2,
+              gradeDistribution: { A: 0, B: 1, C: 1, D: 0, F: 0 },
+              topPerformers: ['Emma Thompson'],
+              strugglingStudents: ['Liam Johnson'],
+              commonWeaknesses: ['Reading comprehension', 'Essay structure', 'Grammar rules'],
+              improvementSuggestions: [
+                'Increase practice opportunities',
+                'Provide more detailed feedback',
+                'Use visual aids and hands-on activities'
+              ]
+            }
+          ],
+          lastUpdated: new Date().toISOString(),
+        }
       };
     default:
       return state;

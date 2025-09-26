@@ -9,7 +9,8 @@ import {
   Settings,
   LogOut,
   GraduationCap,
-  ClipboardList
+  ClipboardList,
+  Brain
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
@@ -22,6 +23,7 @@ const menuItems = [
   { id: 'upload', label: 'Upload Tests', icon: Upload },
   { id: 'results', label: 'Results', icon: BarChart3 },
   { id: 'reports', label: 'Reports', icon: BookOpen },
+  { id: 'ai-analytics', label: 'AI Analytics', icon: Brain },
 ];
 
 export default function Sidebar() {
