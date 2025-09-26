@@ -10,6 +10,7 @@ import TestTemplates from './components/Tests/TestTemplates';
 import FileUpload from './components/Upload/FileUpload';
 import ResultsDashboard from './components/Results/ResultsDashboard';
 import Reports from './components/Reports/Reports';
+import AIAnalyticsDashboard from './components/AIAnalytics/AIAnalyticsDashboard';
 
 function AppContent() {
   const { state, dispatch } = useApp();
@@ -48,6 +49,8 @@ function AppContent() {
         return <ResultsDashboard />;
       case 'reports':
         return <Reports />;
+      case 'ai-analytics':
+        return <AIAnalyticsDashboard />;
       default:
         return <Dashboard />;
     }
