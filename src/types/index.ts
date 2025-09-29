@@ -176,3 +176,100 @@ export interface AssessmentHistory {
   averageScore: number;
   totalAssessments: number;
 }
+
+// AI Analytics Types
+export interface PerformanceInsight {
+  id: string;
+  studentId: string;
+  type: 'weakness' | 'strength' | 'trend' | 'recommendation';
+  category: 'academic' | 'behavioral' | 'engagement';
+  title: string;
+  description: string;
+  priority: 'low' | 'medium' | 'high';
+  confidence: number; // 0-100
+  suggestedActions: string[];
+  createdAt: string;
+  isRead: boolean;
+}
+
+export interface PerformanceTrend {
+  studentId: string;
+  subject: string;
+  period: 'week' | 'month' | 'term' | 'year';
+  trend: 'improving' | 'declining' | 'stable' | 'volatile';
+  trendScore: number; // -100 to 100
+  dataPoints: {
+    date: string;
+    score: number;
+    assessmentType: string;
+  }[];
+  predictedScore?: number;
+  confidence: number;
+}
+
+export interface LearningGap {
+  id: string;
+  studentId: string;
+  subject: string;
+  topic: string;
+  severity: 'minor' | 'moderate' | 'major' | 'critical';
+  description: string;
+  suggestedResources: string[];
+  estimatedTimeToClose: number; // in days
+  createdAt: string;
+  status: 'open' | 'in_progress' | 'closed';
+}
+
+export interface AIRecommendation {
+  id: string;
+  type: 'teaching_strategy' | 'intervention' | 'resource' | 'assessment';
+  title: string;
+  description: string;
+  targetStudents: string[];
+  priority: 'low' | 'medium' | 'high';
+  estimatedImpact: number; // 0-100
+  implementationSteps: string[];
+  requiredResources: string[];
+  createdAt: string;
+  status: 'pending' | 'in_progress' | 'completed' | 'dismissed';
+}
+
+export interface PerformanceAlert {
+  id: string;
+  type: 'grade_drop' | 'missing_assignment' | 'attendance' | 'behavior' | 'improvement';
+  studentId: string;
+  title: string;
+  message: string;
+  severity: 'info' | 'warning' | 'critical';
+  createdAt: string;
+  isRead: boolean;
+  actionRequired: boolean;
+  relatedData?: any;
+}
+
+export interface SubjectPerformanceBreakdown {
+  subject: string;
+  averageScore: number;
+  studentCount: number;
+  gradeDistribution: {
+    A: number;
+    B: number;
+    C: number;
+    D: number;
+    F: number;
+  };
+  topPerformers: string[];
+  strugglingStudents: string[];
+  commonWeaknesses: string[];
+  improvementSuggestions: string[];
+}
+
+export interface AIAnalyticsData {
+  insights: PerformanceInsight[];
+  trends: PerformanceTrend[];
+  learningGaps: LearningGap[];
+  recommendations: AIRecommendation[];
+  alerts: PerformanceAlert[];
+  subjectBreakdowns: SubjectPerformanceBreakdown[];
+  lastUpdated: string;
+}
