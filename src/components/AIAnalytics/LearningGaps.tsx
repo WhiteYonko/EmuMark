@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Target, Clock, BookOpen, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
 import { LearningGap } from '../../types';
 import { Student } from '../../types';
+import { useApp } from '../../context/AppContext';
 
 interface LearningGapsProps {
   gaps: LearningGap[];

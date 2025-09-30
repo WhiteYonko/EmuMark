@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Lightbulb, Users, Target, BookOpen, CheckCircle, Clock, X } from 'lucide-react';
 import { AIRecommendation } from '../../types';
 import { Student } from '../../types';
+import { useApp } from '../../context/AppContext';
 
 interface AIRecommendationsProps {
   recommendations: AIRecommendation[];
